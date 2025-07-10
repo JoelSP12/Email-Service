@@ -1,11 +1,22 @@
-# Use OpenJDK image
-FROM openjdk:17-jdk-slim
+# === Stage 1: Build with Maven ===
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy the jar (make sure this matches your actual build output)
-COPY target/email-service-1.0.0.jar app.jar
+# Copy source code
+COPY pom.xml .
+COPY src ./src
 
-# Run the jar
+# Build the application
+RUN mvn clean install -DskipTests
+
+# === Stage 2: Run the JAR ===
+FROM eclipse-temurin:17-jdk
+
+WORKDIR /app
+
+# Copy built JAR from previous stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]

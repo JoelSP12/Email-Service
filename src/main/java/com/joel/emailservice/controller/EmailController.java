@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/email")
-@CrossOrigin(origins = "*") // Allow CORS for frontend
+@RequestMapping("/api") // this means all routes here are prefixed with /api
 public class EmailController {
 
     @Autowired
